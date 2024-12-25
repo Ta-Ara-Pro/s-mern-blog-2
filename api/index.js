@@ -7,6 +7,9 @@ import postRoutes from './routes/post.routes.js'
 import cookieParser from 'cookie-parser';
 import commentRoutes from './routes/comment.routes.js'
 
+import cors from 'cors';
+
+
 
 dotenv.config();
 
@@ -27,10 +30,20 @@ app.use(express.json()); //allow to send json file to the backend
 app.use(cookieParser());
 
 
+const corsOptions = {
+    origin: 'http://localhost:5173', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Allow cookies to be sent
+};
+
+app.use(cors(corsOptions));
+
+
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Server is running at port ${PORT}`);
+    console.log(`Server is running at port http://localhost:${PORT}`);
 });
 
 app.use('/api/user', userRouter)
@@ -38,7 +51,10 @@ app.use('/api/auth', authRoutes)
 app.use('/api/post', postRoutes)
 app.use('/api/comment', commentRoutes)
 
-
+app.get('/', (req, res) => {
+    res.send('Server is running!');
+  });
+   
 
 // a middleware to handle errors more easily
 app.use((err, req, res, next) => {
